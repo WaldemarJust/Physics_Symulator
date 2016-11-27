@@ -37,15 +37,8 @@ public class Vector3D : MonoBehaviour
         return new Vector3D(B.transform.position.x, B.transform.position.y - Fallingspeed, B.transform.position.z);
     }
 
-    // Use this for initialization
-    void Start()
+    public static Vector3D Jump(GameObject C, float JumpSpeed)
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        return new Vector3D(C.transform.position.x, C.transform.position.y + JumpSpeed * Time.deltaTime, C.transform.position.z);
     }
 }
