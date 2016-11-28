@@ -35,10 +35,5 @@ public class Vector3D : MonoBehaviour
     public static Vector3D Falling (GameObject B, float Fallingspeed)
     {
         return new Vector3D(B.transform.position.x, B.transform.position.y - Fallingspeed, B.transform.position.z);
-    }
-
-    public static Vector3D Jump(GameObject C, float JumpSpeed)
-    {
-        return new Vector3D(C.transform.position.x, C.transform.position.y + JumpSpeed * Time.deltaTime, C.transform.position.z);
-    }
+    } 
 }
