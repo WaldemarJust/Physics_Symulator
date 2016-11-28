@@ -24,6 +24,6 @@ public class Movement : MonoBehaviour
 
         this.gameObject.GetComponent<Transform>().transform.Translate(MovementVector.x, MovementVector.y, MovementVector.z + MovementSpeed * Time.deltaTime);
         SideMovement = Input.GetAxis("Horizontal") * MovementSpeed;
-        SideMovement *= Time.deltaTime;
+        SideMovement *= Time.deltaTime;        
     }   
 }

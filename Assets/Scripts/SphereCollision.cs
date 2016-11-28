@@ -3,8 +3,8 @@ using System.Collections;
 
 public class SphereCollision : MonoBehaviour
 {
-    public  float Fallingspeed;
-    public float JumpSpeed;
+    public float Fallingspeed;
+    public float Jumpspeed;
     SphereCollision collisionCheck;
 
     public float distance;
@@ -25,18 +25,21 @@ public class SphereCollision : MonoBehaviour
 
         distance = Mathf.Sqrt((X - Sphere.transform.position.x) * (X - Sphere.transform.position.x) + (Y - (Sphere.transform.position.y)) * (Y - (Sphere.transform.position.y)) + (Z - Sphere.transform.position.z) * (Z - Sphere.transform.position.z));
 
-        return distance < Sphere.transform.localScale.y/2;
+        return distance < Sphere.transform.localScale.y / 2;
     }
 
     void Start()
     {
         collisionCheck = GetComponent<SphereCollision>();
         Fallingspeed = 0.1f;
-        
+        Jumpspeed = 0f;
+
     }
 
     void Update()
-    {      
+    {
         this.transform.position = Vector3D.Falling(this.gameObject, Fallingspeed);
+        this.transform.position = Vector3D.Jump(this.gameObject, Jumpspeed);
+
     }
 }
