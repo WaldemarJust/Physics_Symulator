@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class SphereCollision : MonoBehaviour
 {
-    SphereCollision collisionCheck;
+    //SphereCollision collisionCheck;
     public AudioManager AudioContainer;
 
-    AudioSource SoundSource;    
+    /// <summary>
+    /// A List of Colliders this Collider is currently colliding with
+    /// </summary>
+    public List<BoxCollider> Collisions;
 
-    public float Fallingspeed;
+    public float timer;    
+    public float FallingSpeed;
     public float Jumpspeed;
     public float distance;
+    AudioSource SoundSource;
     public bool CheckIfCollision(GameObject Sphere, GameObject other)
     {
         if (Sphere != null)
@@ -36,27 +43,32 @@ public class SphereCollision : MonoBehaviour
     }
 
     void Start()
-    {
-        collisionCheck = GetComponent<SphereCollision>();
-        Fallingspeed = 0.1f;
+    {        
+        FallingSpeed = 0.1f;
         Jumpspeed = 0f;
+        timer = 0;
         SoundSource = GetComponent<AudioSource>();
-        SoundSource.clip = AudioContainer.au_Clip_BackBeat;
-        SoundSource.Play();        
+
+
     }
 
     void Update()
-    {
-        this.transform.position = Vector3D.Falling(this.gameObject, Fallingspeed);
+    {        
+        this.transform.position = Vector3D.Falling(this.gameObject, FallingSpeed);
         this.transform.position = Vector3D.Jump(this.gameObject, Jumpspeed);
-        if (this.gameObject.transform.position.y <= -20 && this.gameObject.transform.position.y > -22)
-        {            
+        if (this.gameObject.transform.position.y <= -20)
+        {
             if (SoundSource.clip != AudioContainer.au_Clip_KillZone)
             {
                 SoundSource.clip = AudioContainer.au_Clip_KillZone;
-                SoundSource.Play();                
+                SoundSource.Play();
             }
-            Destroy(this.gameObject, 2.5f);
+            timer += Time.deltaTime;
+            if (timer > 2.5f)
+            {
+                Destroy(this.gameObject, 2.5f);
+                SceneManager.LoadScene("LooseScene");
+            }
         }
     }
 }

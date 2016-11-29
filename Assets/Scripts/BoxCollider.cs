@@ -3,14 +3,16 @@ using System.Collections;
 
 public class BoxCollider : MonoBehaviour
 {
-    public AudioManager AudioContainer;
-    public GameObject Sphere;
-    BoxCollider collisionCheck;
     public bool OnCollision;
     public float timer;
     public bool IsJumping;
-    AudioSource SoundSource;
-    
+
+    private AudioSource SoundSource;
+    private BoxCollider collisionCheck;
+
+    public AudioManager AudioContainer;
+    public SphereCollision Sphere;
+    public Movement Movement;
 
 
 
@@ -42,6 +44,8 @@ public class BoxCollider : MonoBehaviour
     }
     void Start()
     {
+        Sphere = FindObjectOfType<SphereCollision>();
+        Movement = Sphere.GetComponent<Movement>();
         collisionCheck = GetComponent<BoxCollider>();
         timer = 0f;
         IsJumping = false;
@@ -53,40 +57,51 @@ public class BoxCollider : MonoBehaviour
     {
         if (Sphere != null)
         {
-            OnCollision = collisionCheck.CheckIfCollisionBox(Sphere, this.gameObject);
+            OnCollision = collisionCheck.CheckIfCollisionBox(Sphere.gameObject, this.gameObject);
 
             if (OnCollision)
             {
-                if (this.gameObject.layer == 8)
+                if (!Sphere.Collisions.Contains(this))
                 {
-                    Sphere.GetComponent<SphereCollision>().Fallingspeed = 0;
-                    timer = 0f;
+                    Sphere.Collisions.Add(this);
 
-                    if (this.gameObject.tag == "JumpBox")
+                    if (this.gameObject.layer == 8)
                     {
-                        Sphere.GetComponent<SphereCollision>().Jumpspeed = 0.7f;
-                        IsJumping = true;
-                        SoundSource.clip = AudioContainer.au_Clip_Jump;
-                        SoundSource.Play();
+                        Sphere.FallingSpeed = 0;
+                        timer = 0f;
+
+                        if (this.gameObject.tag == "JumpBox")
+                        {
+                            Sphere.Jumpspeed = 0.7f;
+                            IsJumping = true;
+                            SoundSource.clip = AudioContainer.au_Clip_Jump;
+                            SoundSource.Play();
+                        }
+
                     }
 
-                }
-
-                if (this.gameObject.tag == "Obstacle")
-                {
-                    Sphere.GetComponent<Movement>().crashed = true;
-                    if (!SoundSource.isPlaying)
+                    if (this.gameObject.tag == "Obstacle")
                     {
-                        SoundSource.clip = AudioContainer.au_Clip_crash;
-                        SoundSource.Play();
+                        Movement.crashed = true;
+                        if (!SoundSource.isPlaying)
+                        {
+                            SoundSource.clip = AudioContainer.au_Clip_crash;
+                            SoundSource.Play();
+                        }
+                        Destroy(this.Sphere, 0.55f);
                     }
-                    Destroy(this.Sphere, 0.55f);
                 }
             }
             else
             {
-                if (this.gameObject.layer != 8)
-                    Sphere.GetComponent<SphereCollision>().Fallingspeed = 0.2f;
+                if (Sphere.Collisions.Contains(this))
+                {
+                    Sphere.Collisions.Remove(this);
+                }
+                if (Sphere.Collisions.Count == 0)
+                {
+                    Sphere.FallingSpeed = 0.2f;
+                }
             }
 
             if (IsJumping)
@@ -94,8 +109,8 @@ public class BoxCollider : MonoBehaviour
                 timer += Time.deltaTime;
                 if (timer > 0.5f)
                 {
-                    Sphere.GetComponent<SphereCollision>().Jumpspeed = 0f;
-                    Sphere.GetComponent<SphereCollision>().Fallingspeed = 0.2f;
+                    Sphere.Jumpspeed = 0f;
+                    Sphere.FallingSpeed = 0.2f;
                     IsJumping = false;
                 }
             }
