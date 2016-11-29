@@ -5,13 +5,15 @@ public class Movement : MonoBehaviour
 {
     public float movement;
     public float MovementSpeed;
-    public float SideMovement;    
+    public float SideMovement;
+    public bool crashed;
 
     // Use this for initialization
     void Start()
     {
         MovementSpeed = 10.0f;
-        SideMovement = 1.0f;       
+        SideMovement = 1.0f;
+        crashed = false;
     }
 
     // Update is called once per frame
@@ -21,9 +23,12 @@ public class Movement : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         Vector3D MovementVector = new Vector3D(horizontal, vertical, 0);
-
-        this.gameObject.GetComponent<Transform>().transform.Translate(MovementVector.x, MovementVector.y, MovementVector.z + MovementSpeed * Time.deltaTime);
+        
+        if (!crashed)
+        {
+            this.gameObject.GetComponent<Transform>().transform.Translate(MovementVector.x, MovementVector.y, MovementVector.z + MovementSpeed * Time.deltaTime);
+        }
         SideMovement = Input.GetAxis("Horizontal") * MovementSpeed;
-        SideMovement *= Time.deltaTime;        
-    }   
+        SideMovement *= Time.deltaTime;
+    }
 }
