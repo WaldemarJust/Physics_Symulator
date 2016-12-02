@@ -65,7 +65,7 @@ public class SphereCollision : MonoBehaviour
     {
         this.transform.position = Vector3D.Falling(this.gameObject, FallingSpeed);
         this.transform.position = Vector3D.Jump(this.gameObject, Jumpspeed);
-        if (this.gameObject.transform.position.y <= -20)
+        if (this.gameObject.transform.position.y <= -30)
         {
             if (!Died)
             {
@@ -81,12 +81,12 @@ public class SphereCollision : MonoBehaviour
         }
         if (Won)
         {
-            WonSceneTimer += Time.deltaTime;            
+            WonSceneTimer += Time.deltaTime;
             if (WonSceneTimer > 2.7f)
             {
                 SceneManager.LoadScene("WinScene");
             }
-        }
+        }        
     }
 
 

@@ -4,28 +4,28 @@ using System.Collections;
 public class Movement : MonoBehaviour
 {
     Vector3D MovementVector = new Vector3D(0, 0, 0);
-    public AudioManager AudioContainer;    
+    public AudioManager AudioContainer;
     AudioSource SoundSource;
     public float movement;
     public float MovementSpeed;
     public float SideMovement;
     public float HorizontalSpeed;
     public bool crashed;
-    //public float PlayTime;
+    public float PlayTime;
 
     private float SpeedTimer;
 
     // Use this for initialization
     void Start()
     {
-       
+
         SideMovement = 1.0f;
         crashed = false;
         SoundSource = GetComponent<AudioSource>();
         SoundSource.clip = AudioContainer.au_Clip_BackBeat;
         SoundSource.Play();
         SpeedTimer = 0f;
-        //PlayTime = 0;
+        PlayTime = 0;
     }
 #if UNITY_STANDALONE
     // Update is called once per frame
@@ -33,11 +33,11 @@ public class Movement : MonoBehaviour
     {
         if (CountDown.play)
         {
-            //PlayTime += Time.deltaTime;
+            PlayTime += Time.deltaTime;
             SpeedTimer += Time.deltaTime;
-            if (SpeedTimer > 20f)
+            if (SpeedTimer > 15f && MovementSpeed < 13)
             {
-                MovementSpeed *= 1.5f;
+                MovementSpeed *= 1.3f;
                 SpeedTimer = 0;
             }
             SoundSource.volume = 1;
@@ -59,8 +59,16 @@ public class Movement : MonoBehaviour
 #if UNITY_ANDROID
     void Update()
     {       
+
         if (CountDown.play)
         {
+     PlayTime += Time.deltaTime;
+            SpeedTimer += Time.deltaTime;
+            if (SpeedTimer > 15f)
+            {
+                MovementSpeed *= 1.3f;
+                SpeedTimer = 0;
+            }
             SoundSource.volume = 1;
             MovementVector = new Vector3D(0, 0, 0);
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)

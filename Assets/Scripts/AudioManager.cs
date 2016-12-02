@@ -10,5 +10,6 @@ public class AudioManager : MonoBehaviour
     public AudioClip au_Clip_CountDown;
     public AudioClip au_Clip_Start;
     public AudioClip au_Clip_YeahBoy;
+    public AudioClip au_Clip_OneUp;
     
 }

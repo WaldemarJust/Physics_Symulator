@@ -9,6 +9,7 @@ public class BoxCollider : MonoBehaviour
     private float unloadLevelTimer;
     public float LooseSceneTimer;
     public bool StartLooseTimer;
+    public bool PickedDiamond;
 
     public bool IsJumping;
 
@@ -63,9 +64,7 @@ public class BoxCollider : MonoBehaviour
         StartLooseTimer = false;
         unloadLevelTimer = 0;
         ShallUnloadLevel = false;
-
-
-
+        PickedDiamond = false;
     }
 
     void Update()
@@ -111,6 +110,7 @@ public class BoxCollider : MonoBehaviour
                 }
                 if (this.gameObject.tag == "Item")
                 {
+                    PickedDiamond = true;                    
                     Utility.Points += 1;
                     this.gameObject.SetActive(false);
                     Sphere.Collisions.Remove(this);
