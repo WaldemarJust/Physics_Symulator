@@ -8,6 +8,7 @@ public class ButtonManager : MonoBehaviour
     {
         CountDown.play = false;
         SceneManager.LoadScene(scene);
+        Application.LoadLevelAdditiveAsync("BallScene");
     }
 
     public void Exit()
@@ -19,5 +20,6 @@ public class ButtonManager : MonoBehaviour
     {
         SceneManager.LoadScene(scene);
     }
+    
 	
 }

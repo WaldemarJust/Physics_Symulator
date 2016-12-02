@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Vector3D : MonoBehaviour
+public class Vector3D
 {
 
 
@@ -34,10 +34,10 @@ public class Vector3D : MonoBehaviour
 
     public static Vector3D Falling (GameObject B, float Fallingspeed)
     {
-        return new Vector3D(B.transform.position.x, B.transform.position.y - Fallingspeed, B.transform.position.z);
+        return new Vector3D(B.transform.position.x, B.transform.position.y - Fallingspeed * Time.deltaTime, B.transform.position.z);
     }
     public static Vector3D Jump(GameObject B, float Jumpspeed)
     {
-        return new Vector3D(B.transform.position.x, B.transform.position.y + Jumpspeed, B.transform.position.z);
+        return new Vector3D(B.transform.position.x, B.transform.position.y + Jumpspeed * Time.deltaTime, B.transform.position.z);
     }
 }

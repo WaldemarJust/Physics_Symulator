@@ -13,11 +13,19 @@ public class SphereCollision : MonoBehaviour
     /// </summary>
     public List<BoxCollider> Collisions;
 
-    public float timer;    
+
+    public float timer;
     public float FallingSpeed;
     public float Jumpspeed;
     public float distance;
+    public GameObject WinScreen;
+    public bool Won;
+    public float WonSceneTimer;
     AudioSource SoundSource;
+
+
+    private bool Died;
+
     public bool CheckIfCollision(GameObject Sphere, GameObject other)
     {
         if (Sphere != null)
@@ -43,32 +51,43 @@ public class SphereCollision : MonoBehaviour
     }
 
     void Start()
-    {        
+    {
         FallingSpeed = 0.1f;
         Jumpspeed = 0f;
         timer = 0;
         SoundSource = GetComponent<AudioSource>();
-
+        WinScreen.SetActive(false);
+        Won = false;
 
     }
 
     void Update()
-    {        
+    {
         this.transform.position = Vector3D.Falling(this.gameObject, FallingSpeed);
         this.transform.position = Vector3D.Jump(this.gameObject, Jumpspeed);
         if (this.gameObject.transform.position.y <= -20)
         {
-            if (SoundSource.clip != AudioContainer.au_Clip_KillZone)
+            if (!Died)
             {
-                SoundSource.clip = AudioContainer.au_Clip_KillZone;
-                SoundSource.Play();
+                SoundSource.PlayOneShot(AudioContainer.au_Clip_KillZone[Random.Range(0, AudioContainer.au_Clip_KillZone.Length)], 1);
+                Died = true;
             }
             timer += Time.deltaTime;
-            if (timer > 2.5f)
+            if (timer > 3.0f)
             {
-                Destroy(this.gameObject, 2.5f);
+                Destroy(this.gameObject);
                 SceneManager.LoadScene("LooseScene");
             }
         }
+        if (Won)
+        {
+            WonSceneTimer += Time.deltaTime;            
+            if (WonSceneTimer > 2.7f)
+            {
+                SceneManager.LoadScene("WinScene");
+            }
+        }
     }
+
+
 }

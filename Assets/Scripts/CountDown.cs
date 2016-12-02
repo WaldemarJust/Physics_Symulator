@@ -7,9 +7,9 @@ public class CountDown : MonoBehaviour
     public AudioManager AudioContainer;
     public Text textObject;
     public GameObject menuObject;
-    private float timer = 4;
+    public float timer = 4;
     public static bool play = false;
-    private bool textbool = true;
+    private bool textbool = true;  
 
     AudioSource SoundSource;
 
@@ -19,6 +19,7 @@ public class CountDown : MonoBehaviour
         menuObject.SetActive(true);
         textObject.text = string.Empty;
         SoundSource = GetComponent<AudioSource>();
+        Utility.Points = 0;
     }
 
     // Update is called once per frame
@@ -28,8 +29,9 @@ public class CountDown : MonoBehaviour
         {            
             timer -= Time.deltaTime;
             textObject.text = ((int)timer).ToString();
+
             if (timer <= 0)
-            {
+            {                
                 play = true;
                 menuObject.SetActive(false);
                 textbool = false;

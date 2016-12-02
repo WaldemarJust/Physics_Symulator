@@ -1,18 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class BoxCollider : MonoBehaviour
 {
     public bool OnCollision;
     public float timer;
+    private float unloadLevelTimer;
+    public float LooseSceneTimer;
+    public bool StartLooseTimer;
+
     public bool IsJumping;
 
-    private AudioSource SoundSource;
-    private BoxCollider collisionCheck;
+    public string Level;
+    public string UnloadLevel;
+    public bool ShallUnloadLevel;
 
     public AudioManager AudioContainer;
     public SphereCollision Sphere;
     public Movement Movement;
+
+    private AudioSource SoundSource;
+    private BoxCollider collisionCheck;
 
 
 
@@ -48,8 +57,14 @@ public class BoxCollider : MonoBehaviour
         Movement = Sphere.GetComponent<Movement>();
         collisionCheck = GetComponent<BoxCollider>();
         timer = 0f;
+        LooseSceneTimer = 0;
         IsJumping = false;
         SoundSource = GetComponent<AudioSource>();
+        StartLooseTimer = false;
+        unloadLevelTimer = 0;
+        ShallUnloadLevel = false;
+
+
 
     }
 
@@ -68,12 +83,14 @@ public class BoxCollider : MonoBehaviour
                     if (this.gameObject.layer == 8)
                     {
                         Sphere.FallingSpeed = 0;
-                        timer = 0f;
 
                         if (this.gameObject.tag == "JumpBox")
                         {
-                            Sphere.Jumpspeed = 0.7f;
+                            Sphere.Jumpspeed = 43f;
                             IsJumping = true;
+                            Application.LoadLevelAdditiveAsync(Level);
+                            ShallUnloadLevel = true;
+
                             SoundSource.clip = AudioContainer.au_Clip_Jump;
                             SoundSource.Play();
                         }
@@ -89,7 +106,20 @@ public class BoxCollider : MonoBehaviour
                             SoundSource.Play();
                         }
                         Destroy(this.Sphere, 0.55f);
+                        StartLooseTimer = true;
                     }
+                }
+                if (this.gameObject.tag == "Item")
+                {
+                    Utility.Points += 1;
+                    this.gameObject.SetActive(false);
+                    Sphere.Collisions.Remove(this);
+                }
+                if (this.gameObject.tag == "WinPlatform")
+                {
+                    Sphere.WinScreen.SetActive(true);
+                    Sphere.Won = true;
+                    Movement.HorizontalSpeed = 0;
                 }
             }
             else
@@ -99,21 +129,44 @@ public class BoxCollider : MonoBehaviour
                     Sphere.Collisions.Remove(this);
                 }
                 if (Sphere.Collisions.Count == 0)
-                {
-                    Sphere.FallingSpeed = 0.2f;
-                }
+                {                    
+                     Sphere.FallingSpeed = 17f;                    
+                }                
             }
 
             if (IsJumping)
             {
                 timer += Time.deltaTime;
-                if (timer > 0.5f)
+                if (timer > 0.7f)
                 {
                     Sphere.Jumpspeed = 0f;
-                    Sphere.FallingSpeed = 0.2f;
+                    Sphere.FallingSpeed = 17f;
                     IsJumping = false;
+                    timer = 0f;
                 }
             }
         }
+        if (StartLooseTimer)
+        {
+            LooseSceneTimer += Time.deltaTime;
+            if (LooseSceneTimer > 1.0f)
+            {
+                SceneManager.LoadScene("LooseScene");
+            }
+        }
+        if (ShallUnloadLevel)
+        {
+
+            unloadLevelTimer += Time.deltaTime;
+        }
+
+        if (unloadLevelTimer >= 2)
+        {
+            Application.UnloadLevel(UnloadLevel);
+            unloadLevelTimer = 0;
+            ShallUnloadLevel = false;
+        }
+
     }
+
 }
